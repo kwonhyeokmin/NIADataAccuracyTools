@@ -244,8 +244,6 @@ class DataAccuracyChecker(object):
             oks = compute_oks(dt_2d_pos, gt_2d_pos, s)
             oks_list.append(oks)
             count += 1
-            if count > 50:
-                break
         oks_list = np.array(oks_list).reshape(-1, 1)
         result['OKS (AP: {})'.format(self.iou_thrs)] = float(sum(oks_list > self.iou_thrs)) / count * 100
         # load camera paramter data
