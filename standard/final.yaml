@@ -1,0 +1,30 @@
+filepath:
+  2D_json: 2D_json
+  3D_json: 3D_json
+  3D_shape: 3D_shape
+  Camera_json: Camera_json
+  ShapeParam_json: ShapeParam_json
+  Actor: Actor
+  Sequence_json: Sequence_json
+  Image: Image
+cam_info:
+  -
+    date: 20200810
+    id:
+      - 01_F160A
+      - 01_F160B
+  -
+    date: 20200811
+    id:
+      - 36_F106A
+standard:
+  shape_params: 24
+  templates: 24
+  sequence: 1
+  cam_params: 4
+  images: 2000000
+  2d_joint: 200000
+  shape: 500000
+  3d_joint: 500000
+  pointcloud: 25000
+
