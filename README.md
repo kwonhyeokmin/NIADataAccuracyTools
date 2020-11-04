@@ -48,14 +48,14 @@ python main.py --[yaml 파일 경로] --[결과 저장 경로]
 2. 2D 조인트 좌표 정보 참값 정확도
 
     구축된 2D 조인트 좌표 정보에 대해 정확도 측정 
-    OKS AP:0.5 기준 정확도 측정
-    ![formular1]('./asset/formular_1.gif)
+    - OKS AP:0.5 기준 정확도 측정
+    - ![formular1](asset/formular_1.gif)
     
 3. 3D 조인트 좌표 정보 참값 정확도
 
     구축된 3D 조인트 좌표 정보에 대해 정확도 측정
-        - 각 조인트 항목의 평균 Accuracy
-        - 정답의 판단은 아래 산출식을 이용
-        ![formular2]('./asset/formular_2.gif)
-        ![formular3]('./asset/formular_3.gif)
+    - 각 조인트 항목의 평균 Accuracy
+    - 정답의 판단은 아래 산출식을 이용
+        - ![formular2](asset/formular_2.gif)
+        - ![formular3](asset/formular_3.gif)
   
