@@ -56,5 +56,5 @@ python main.py --[yaml 파일 경로] --[결과 저장 경로]
     구축된 3D 조인트 좌표 정보에 대해 정확도 측정
         - 각 조인트 항목의 평균 Accuracy
         - 정답의 판단은 아래 산출식을 이용
-        <img src="https://latex.codecogs.com/svg.latex?\;\begin{align*}formula=\frac{\sum_{i}\delta(\psi (B,v_i))\delta(v_i>0)}{\sum_{i}\delta(v_i>0)}\\ \psi (B_i,v_i)=\left\{\begin{matrix} \1\, \, \, \, \, \, \, \,  if\, \,  v_i\in B_i\\0 \, \, \, \, \, \, otherwise \end{matrix}\right.\end{align*}"/>
+        <img src="https://latex.codecogs.com/svg.latex?\;\begin{align*}formula=\frac{\sum_{i}\delta(\psi%20(B,v_i))\delta(v_i%3E0)}{\sum_{i}\delta(v_i%3E0)}\\%20\psi%20(B_i,v_i)=\left\{\begin{matrix}%20\1\,%20\,%20\,%20\,%20\,%20\,%20\,%20\,%20%20if\,%20\,%20%20v_i\in%20B_i\\0%20\,%20\,%20\,%20\,%20\,%20\,%20otherwise%20\end{matrix}\right.\end{align*}"/>
   
