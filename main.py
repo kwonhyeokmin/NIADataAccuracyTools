@@ -15,7 +15,7 @@ if __name__ == '__main__':
     output_path = args.output_path
 
     checker = DataAccuracyChecker(yaml_file=yaml_path)
-    with open(os.path.join(output_path, 'result.txt'), 'w') as f:
+    with open(os.path.join(output_path, 'result.txt'), 'w+') as f:
         f.write('[최종 산출물 분류 및 규모 ]\n')
         for k, v in checker.check_1_1().items():
             f.write('{}:\t{:,}%\n'.format(k, round(v, 2)))
