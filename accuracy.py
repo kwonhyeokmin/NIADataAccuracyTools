@@ -223,7 +223,7 @@ class DataAccuracyChecker(object):
             if not os.path.exists(obj_path):
                 continue
             mesh = trimesh.load(obj_path)
-            vec = trimesh.transformations.scale_and_translate(0.01, np.ones(3))
+            vec = trimesh.transformations.scale_and_translate(0.01, np.zeros(3))
             mesh.apply_transform(vec)
             renderer.update_mesh(mesh)
             _, valid_mask = renderer.render_mesh(cam_no=camera_no, bg=np.zeros((1080, 1920,3)))
