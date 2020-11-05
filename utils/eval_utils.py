@@ -21,6 +21,16 @@ def compute_oks(dts, gts, s):
         tmp.append(np.exp(e))
     return sum(tmp) / sum(k)
 
+def compute_custom_formular(dts, mask):
+    bg = np.ones(shape=mask.shape)
+    B = bg * mask
+    psi = 0
+    for dt in dts:
+        x, y = dt
+        if B[x, y] == 1:
+            psi += 1
+    return psi / len(dts)
+
 def projection(p3d_list, intrinsics, extrinsics, width=1920):
     p2ds = []
     for i, p3d in enumerate(p3d_list):
