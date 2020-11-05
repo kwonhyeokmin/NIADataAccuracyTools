@@ -248,4 +248,88 @@ class DataAccuracyChecker(object):
         result['OKS (AP: {})'.format(self.iou_thrs)] = float(sum(oks_list > self.iou_thrs)) / count * 100
         # load camera paramter data
         return result
+    
+    def check_1_5(self):
+        """
+        2.4 참값(Ground Truth) 정확도
+        1-5 구축된 3D 조인트 좌표 정보에 대해 정확도 측정
+        :return custom formular:
+        """
+        result = {}
+        cam_info = self.standard['cam_info']
+        filepath = self.standard['filepath']
+        # load 2d joint info
+        joint_2d_paths = [x for x in Path(filepath['2D_json']).rglob('*.json')]
+        # load 3d joint info
+        joint_3d_paths = [x for x in Path(filepath['3D_json']).rglob('*.json')]
+        # load cam info
+        cam_param_pathes = [x for x in Path(filepath['Camera_json']).rglob('*.json')]
+        oks_list = []
+        # load 2d joint data
+        count = 0
+        for joint_2d_path in joint_2d_paths:
+            if not os.path.exists(joint_2d_path):
+                continue
+            with open(joint_2d_path) as f:
+                info_2d = json.load(f)
+            image_path = info_2d['annotations']['img_path']
+            seq_id, actor_id, vid_id, frame_no = os.path.basename(image_path).split('_')
+            frame_no = frame_no.replace('.jpg', '')
+            folder_id = '_'.join([seq_id, actor_id])
+            file_id = os.path.join(folder_id, '3D_{}.json'.format('_'.join([folder_id, frame_no])))
+            joint_3d_path = os.path.join(filepath['3D_json'], file_id)
+            if not os.path.exists(joint_3d_path):
+                continue
+            with open(joint_3d_path) as f:
+                info_3d = json.load(f)
+            # camera info
+            cam_param_pathe = os.path.join(filepath['Camera_json'], '{}.json'.format('_'.join([seq_id, actor_id, vid_id])))
+            if not os.path.exists(cam_param_pathe):
+                continue
+            with open(cam_param_pathe, 'r') as f:
+                camera_param = json.load(f)
+            # cam_date = next((item for item in cam_info if folder_id in item['id']))['date']
 
+            # obj info
+            obj_path = os.path.join(filepath['3D_shape'], folder_id, '{}.obj'.format('_'.join([seq_id, actor_id, vid_id])))
+            renderer = CustomRenderer()
+            camera_no = camera_param['camera_no']
+            if camera_no != 2:
+                continue
+            extrinsics = np.array(camera_param['extrinsics'])
+            intrinsics = np.array(camera_param['intrinsics'])
+            princpt = intrinsics[:2, 2] * 1920
+            focal = np.diag(intrinsics[:2, :2]) * 1920
+            # preprocessing extrinsics
+            cam_extrinsics = np.vstack((extrinsics, np.array([0, 0, 0, 1])))
+            extrinsics_inv = np.linalg.inv(cam_extrinsics)
+            extrinsics_inv[:3,3] *= 0.001
+            extrinsics_inv[:,1:3] *= -1
+            cam_extrinsics = np.linalg.inv(extrinsics_inv)
+            cam_param = {'focal':focal, 'princpt':princpt, 'extrinsics':cam_extrinsics, 'cam_no': camera_no}
+            renderer.insert_camera(cam_param=cam_param)
+            if not os.path.exists(obj_path):
+                continue
+            mesh = trimesh.load(obj_path)
+            vec = trimesh.transformations.scale_and_translate(0.01, np.zeros(3))
+            mesh.apply_transform(vec)
+            renderer.update_mesh(mesh)
+            _, valid_mask = renderer.render_mesh(cam_no=camera_no, bg=np.zeros((1080, 1920,3)))
+            cv2.imwrite('overlay.jpg', _)
+            del renderer
+            dt_3d_pos = np.array(info_3d['annotations']['3d_pos'])
+            dt_2d_pos = projection(dt_3d_pos, intrinsics, extrinsics)
+            oks_list.append(compute_custom_formular(dt_2d_pos, valid_mask))
+            # display
+            # vis_img = cv2.imread(os.path.join(filepath['Image'], image_path))
+            # if vis_img is None:
+            #     vis_img = np.zeros(shape=(1080, 1920, 3))
+            # vis_img = display(dt_2d_pos, vis_img, color=[255, 0, 0])
+            # vis_img = display(gt_2d_pos, vis_img, color=[0, 0, 255])
+            # cv2.imwrite('test.jpg', vis_img)
+            # calculate oks
+            count += 1
+
+        result['평균 accuracy'] = sum(oks_list) / count * 100
+        # load camera paramter data
+        return result
