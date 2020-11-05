@@ -23,3 +23,6 @@ if __name__ == '__main__':
         f.write('[2D 조인트 좌표 정보 참값 정확도 ]\n')
         for k, v in checker.check_1_4().items():
             f.write('{}:\t{:,}%\n'.format(k, round(v, 2)))
+        for k, v in checker.check_1_5().items():
+            print('{}:\t{:,}%'.format(k, round(v, 2)))
+            f.write('{}:\t{:,}%\n'.format(k, round(v, 2)))
